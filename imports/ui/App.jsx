@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { createContainer } from 'meteor/react-meteor-data';
 
@@ -9,6 +10,20 @@ import Task from './Task.jsx';
 // App component
 
 class App extends React.Component {
+  handleSubmit(e) {
+    e.preventDefault();
+
+    const text = ReactDOM.findDOMNode(this.refs.textInput).value.trim();
+
+    Tasks.insert({
+      text,
+      createdAt: new Date(),
+    });
+
+    // Clear form
+    ReactDOM.findDOMNode(this.refs.textInput).value = '';
+  }
+
   getTasks() {
     return [
       { _id: 1, text: 'Necktie' },
@@ -28,6 +43,15 @@ class App extends React.Component {
       <div className="container">
         <header>
           <h1>Todo List</h1>
+
+          <form className="new-task" onSubmit={this.handleSubmit.bind(this)}>
+            <input
+              type="text"
+              ref="textInput"
+              placeholder="Type to add new tasks"
+            />
+          </form>
+
         </header>
 
         <ul>
